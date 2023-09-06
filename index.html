@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LaTeX Previewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link href="https://db.onlinewebfonts.com/c/48b9219685fb81db1b8d6ec313e67ca4?family=Cascadia+Code+Regular" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/11b5924767.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./output.css" />
+  </head>
+  <body>
+    <div class="m-auto flex h-[95vh] w-[97.5vw] justify-evenly gap-6 [&>*]:rounded-2xl [&>*]:bg-gray-900">
+      <div class="flex flex-col gap-5 p-5">
+        <div class="text-center">
+          <h1 class="text-6xl">LaTeX</h1>
+          <p class="text-xl">Previewer</p>
+        </div>
+        <div class="relative rounded-lg bg-gray-800 py-2">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-3"></i>
+          <input type="text" placeholder="Search query" name="search-insert-list" id="search-insert-list" class="h-full w-full rounded-lg bg-inherit pl-10 pr-3 outline-none" />
+        </div>
+        <div class="flex flex-grow flex-col gap-2 overflow-y-scroll rounded-2xl bg-gray-800 p-2 [&>button>p]:mx-0 [&>button>p]:my-auto [&>button]:flex [&>button]:h-min [&>button]:justify-between [&>button]:gap-5 [&>button]:rounded-lg [&>button]:bg-gray-700 [&>button]:px-5 [&>button]:py-2 [&>button]:transition-colors [&>button]:duration-[250ms]" id="insert-list"></div>
+        <div class="flex flex-col gap-3">
+          <div class="flex gap-5 [&>*]:hover:cursor-pointer">
+            <label for="autocompile">Auto-Compile</label>
+            <input type="checkbox" name="autocompile" id="autocompile" checked />
+          </div>
+          <button type="button" id="compile" class="h-full w-full rounded-xl bg-green-700 py-2 font-bold transition-transform duration-[250ms] hover:scale-105">Compile</button>
+        </div>
+      </div>
+      <textarea placeholder="LaTeX code" name="latex" id="latex" class="flex-grow resize-none p-5 outline-none"></textarea>
+      <div class="aspect-[1/1.4142] p-5" id="latex-preview"></div>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>

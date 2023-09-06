@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::-webkit-scrollbar {
+    @apply hidden;
+  }
+
+  *,
+  *::before,
+  *::after {
+    @apply box-border;
+  }
+
+  * {
+    @apply m-0 select-none p-0 font-main tracking-wide text-white;
+  }
+
+  html {
+    color-scheme: dark light;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply flex min-h-screen w-screen bg-gray-950;
+  }
+
+  img,
+  picture,
+  svg,
+  video {
+    @apply block max-w-full;
+  }
+}
