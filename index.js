@@ -1,8 +1,9 @@
 window.addEventListener("beforeunload", (event) => {
-    event.preventDefault();
-    event.returnValue = "";
+    if (document.getElementById("latex").value != "") {
+        event.preventDefault();
+        event.returnValue = "";
+    }
 });
-
 
 const GetJsonData = (path) => {
     let xhr = new XMLHttpRequest();
@@ -10,6 +11,8 @@ const GetJsonData = (path) => {
     xhr.send();
     if (xhr.status === 200) return JSON.parse(xhr.responseText);
 }
+
+const unsupportedViewport = document.getElementById("latex").getBoundingClientRect().width < 400;
 
 const Inserts = GetJsonData("./inserts.json").Inserts;
 
@@ -36,24 +39,31 @@ document.getElementById("search-insert-list").addEventListener("input", (event) 
     }
 });
 
-Inserts.forEach(e => {
-    const symbolButton = document.createElement("button");
-    symbolButton.type = "button";
-    symbolButton.title = e.name;
-    symbolButton.classList.add("hover:bg-gray-600");
+if (!unsupportedViewport) {
+    Inserts.forEach(e => {
+        const symbolButton = document.createElement("button");
+        symbolButton.type = "button";
+        symbolButton.title = e.name;
+        symbolButton.classList.add("hover:bg-gray-600");
 
-    symbolButton.appendChild(document.createElement("p"))
+        symbolButton.appendChild(document.createElement("p"))
 
-    symbolButton.children[0].innerHTML = e.syntax;
-    symbolButton.setAttribute("syntax", e.syntax);
-    UpdateLatexPreview(symbolButton.children[0], `\\[${e.syntax}\\]`);
+        symbolButton.children[0].innerHTML = e.syntax;
+        symbolButton.setAttribute("syntax", e.syntax);
+        UpdateLatexPreview(symbolButton.children[0], `\\[${e.syntax}\\]`);
 
-    symbolButton.addEventListener("click", () => {
-        navigator.clipboard.writeText(symbolButton.getAttribute("syntax"));
+        symbolButton.addEventListener("click", () => {
+            navigator.clipboard.writeText(symbolButton.getAttribute("syntax"));
+        });
+
+        document.getElementById("insert-list").appendChild(symbolButton);
     });
 
-    document.getElementById("insert-list").appendChild(symbolButton);
-});
+    document.getElementById("unsupported-viewport-modal").classList.add("hidden");
+}
+else {
+    document.getElementById("unsupported-viewport-modal").classList.add("flex");
+}
 
 document.getElementById("autocompile").addEventListener("click", (event) => {
     autoCompile = event.target.checked;
@@ -70,7 +80,7 @@ setInterval(() => {
     if (compilationCooldown > 1 && oldLatexInput != latexInput) UpdateLatexPreview(latexPreview, latexInput);
 }, 1000);
 
-document.getElementById("latex").value = "\\[\n\n\\]";
+document.getElementById("latex").value = "";
 document.getElementById("latex").addEventListener("input", (event) => {
     compilationCooldown = 0;
     latexInput = event.target.value;
