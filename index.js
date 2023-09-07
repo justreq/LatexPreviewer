@@ -1,4 +1,8 @@
-// https://sites.math.washington.edu/~reu/docs/latex_symbols.pdf
+window.addEventListener("beforeunload", (event) => {
+    event.preventDefault();
+    event.returnValue = "";
+});
+
 
 const GetJsonData = (path) => {
     let xhr = new XMLHttpRequest();
@@ -7,7 +11,7 @@ const GetJsonData = (path) => {
     if (xhr.status === 200) return JSON.parse(xhr.responseText);
 }
 
-const Inserts = GetJsonData("./inserts.json");
+const Inserts = GetJsonData("./inserts.json").Inserts;
 
 let latexInput = "";
 let oldLatexInput = "";
@@ -32,21 +36,21 @@ document.getElementById("search-insert-list").addEventListener("input", (event) 
     }
 });
 
-[].forEach(e => {
+Inserts.forEach(e => {
     const symbolButton = document.createElement("button");
     symbolButton.type = "button";
-    symbolButton.title = e;
+    symbolButton.title = e.name;
     symbolButton.classList.add("hover:bg-gray-600");
 
-    symbolButton.innerHTML = "<div class=\"flex gap-5 h-full\"><p></p><div class=\"w-1 h-full bg-gray-600 rounded-full m-auto\"></div></div><p class=\"text-xs\"></p>";
+    symbolButton.appendChild(document.createElement("p"))
 
-    symbolButton.children[0].children[0].innerHTML = e;
-    symbolButton.children[1].textContent = e;
-    UpdateLatexPreview(symbolButton.children[0].children[0], `\\(${symbolButton.title}\\)`);
+    symbolButton.children[0].innerHTML = e.syntax;
+    symbolButton.setAttribute("syntax", e.syntax);
+    UpdateLatexPreview(symbolButton.children[0], `\\[${e.syntax}\\]`);
 
     symbolButton.addEventListener("click", () => {
-        navigator.clipboard.writeText(symbolButton.title);
-    })
+        navigator.clipboard.writeText(symbolButton.getAttribute("syntax"));
+    });
 
     document.getElementById("insert-list").appendChild(symbolButton);
 });
@@ -64,7 +68,7 @@ setInterval(() => {
 
     compilationCooldown++;
     if (compilationCooldown > 1 && oldLatexInput != latexInput) UpdateLatexPreview(latexPreview, latexInput);
-}, 2000);
+}, 1000);
 
 document.getElementById("latex").value = "\\[\n\n\\]";
 document.getElementById("latex").addEventListener("input", (event) => {
